@@ -65,24 +65,66 @@ parsedDataset.forEach(line => {
     let secondColumn = splittedArray[1]
     let firstColValue = firstCol[firstColumn]
     let secondColValue = secondCol[secondColumn]
-    let shape = shapeSelectedPoint[secondColValue]
-
-    total += shape
-
-    console.log(firstColValue + " VS " + secondColValue)
-    console.log("TOTAL SCORED : " + winCond(firstColValue,secondColValue) + " + SHAPE " + shape)
+    total +=shapeSelectedPoint[secondColValue]
+    // console.log(firstColValue + " VS " + secondColValue)
+    // console.log("TOTAL SCORED : " + winCond(firstColValue,secondColValue) + " + SHAPE " + shape)
 
     total += winCond(firstColValue,secondColValue)
 
-    console.log("TOTAL : " + total)
+})
 
-    /*let firstColumnvalue = Object.keys(firstCol).find(key => firstCol[key] === firstColumn)
-    let secondColumnvalue = Object.keys(secondCol).find(key => key === secondColumn)
+console.log("Total part 1 : " + total)
 
-    console.log("firstColumn " + firstColumnvalue)
-    console.log("secondColumn " + secondColumnvalue)*/
+/// PART 2
+const shapeToSelect = {
+    X : "Lose",
+    Y: "Draw",
+    Z: "Win"
+}
+
+let total2 = 0
+
+parsedDataset.forEach(line => {
+    // console.log(line)
+    const splittedArray = line.split(" ");
+    let firstColumn = splittedArray[0]
+    let secondColumn = splittedArray[1]
+    let firstColValue = firstCol[firstColumn]
+    let outcome = shapeToSelect[secondColumn]
+
+    total2+=calculateShapeToChoose(firstColValue,outcome)
 })
 
 
+function calculateShapeToChoose(firstColValue,outcome) {
 
+    let total = 0
 
+    if (outcome === "Draw") {
+        total += outcomeRound.Draw
+        total += shapeSelectedPoint[firstColValue]
+    }else if (outcome === "Win") {
+        total+=outcomeRound.Win
+
+        if (firstColValue === firstCol.A) {
+            total += shapeSelectedPoint.Paper
+        }else if (firstColValue === firstCol.B) {
+            total += shapeSelectedPoint.Scissors
+        }else {
+            total += shapeSelectedPoint.Rock
+        }
+    }else {
+        total+= outcomeRound.Lose
+        if (firstColValue === firstCol.A) {
+            total += shapeSelectedPoint.Scissors
+        }else if (firstColValue === firstCol.B) {
+            total += shapeSelectedPoint.Rock
+        }else {
+            total += shapeSelectedPoint.Paper
+        }
+    }
+
+    return total
+}
+
+console.log("Total part 2 : " + total2)
