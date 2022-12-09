@@ -35,3 +35,35 @@ function isFullyContained(firstPart,secondpart) {
 }
 
 //PART 2
+
+let numberOfPairsOverlapped = 0
+let array2 = []
+parsedDataset.forEach(line => {
+    array2 = line.split(',')
+    numberOfPairsOverlapped += isOverlapped(array2[0].split('-'),array2[1].split('-'))
+    array2 = []
+})
+
+console.log("Total part 2 : " + numberOfPairsOverlapped)
+
+function isOverlapped(firstPart,secondpart) {
+    console.log("isOverlapped()")
+    console.log(firstPart)
+    console.log(secondpart)
+
+    const firstPartFirstValue = parseInt(firstPart[0],10)
+    const firstPartSecondValue =parseInt(firstPart[1],10)
+    const secondPartFirstValue =parseInt(secondpart[0],10)
+    const secondPartSecondValue =parseInt(secondpart[1],10)
+
+    if (secondPartFirstValue <= firstPartFirstValue  &&  firstPartFirstValue<= secondPartSecondValue) {
+        return true
+    } else if (secondPartFirstValue <= firstPartSecondValue && firstPartFirstValue<= secondPartSecondValue) {
+        return true
+    } else if (firstPartFirstValue <= secondPartFirstValue && secondPartFirstValue <= firstPartSecondValue) {
+        return true
+    } else if (firstPartFirstValue <= secondPartSecondValue && secondPartFirstValue<= firstPartSecondValue) {
+        return true
+    }
+    return false
+}
