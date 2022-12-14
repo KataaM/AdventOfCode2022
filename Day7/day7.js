@@ -6,7 +6,53 @@ const parsedDataset = dataset.split(/\n/);
 
 // PART 1
 let finalAnswerPart1 = 0
-part1()
+// part1()
+
+part1Refactor()
+
+function part1Refactor() {
+    const map = new Map()
+    let path =["/"]
+
+    parsedDataset.forEach(line => {
+        console.log("")
+        let lineSplitted = line.split(" ")
+
+        if (new RegExp(/\$.*cd/).test(line)) {
+            let cdValue = lineSplitted[2].trim()
+            if (cdValue === "..")  {
+                console.log("path pop")
+                path.pop()
+            } else if(cdValue !== "/"){
+                path.push(cdValue)
+                console.log("path push : " + path)
+            } else {
+                path = ["/"]
+            }
+        } else if (!(new RegExp(/\$.*ls/).test(line))) {
+            if (lineSplitted [0] !== "dir") {
+                let value = parseInt(lineSplitted[0],10)
+                if (map.has(path)) {
+                    console.log(map)
+                    console.log(map.get(path))
+
+                    let size = map.get(path)
+                    map.set(path,value+parseInt(size,10))
+                    console.log(map)
+
+                }else {
+                    console.log("Path : " + path )
+                    console.log("Value : " + value)
+                    map.set(path,value)
+                }
+            }
+        }
+
+    })
+
+    console.log("Final map :  ")
+    console.log(map)
+}
 
 
 
