@@ -1,6 +1,5 @@
-const sourceFile = "example.txt";
+const sourceFile = "input.txt";
 const fs = require('fs');
-const { json } = require('stream/consumers');
 const dataset = fs.readFileSync(sourceFile, 'utf8');
 const parsedDataset = dataset.split(/\n/);
 
@@ -12,7 +11,7 @@ part1Refactor()
 
 function part1Refactor() {
     const map = new Map()
-    let path =["/"]
+    let path ="/"
 
     parsedDataset.forEach(line => {
         console.log("")
@@ -21,28 +20,31 @@ function part1Refactor() {
         if (new RegExp(/\$.*cd/).test(line)) {
             let cdValue = lineSplitted[2].trim()
             if (cdValue === "..")  {
-                console.log("path pop")
-                path.pop()
+                // console.log("path pop")
+                // path.pop()
+                path = path.slice(0,-2)
             } else if(cdValue !== "/"){
-                path.push(cdValue)
-                console.log("path push : " + path)
+                path += cdValue + "/"
+                // path.push(cdValue)
+                // console.log("path push : " + path)
             } else {
-                path = ["/"]
+                path ="/"
+                // path = ["/"]
             }
         } else if (!(new RegExp(/\$.*ls/).test(line))) {
             if (lineSplitted [0] !== "dir") {
                 let value = parseInt(lineSplitted[0],10)
                 if (map.has(path)) {
-                    console.log(map)
-                    console.log(map.get(path))
-
+                    // console.log(map)
+                    // console.log(map.get(path))
                     let size = map.get(path)
+                    // console.log("Path : " + path.toString)
                     map.set(path,value+parseInt(size,10))
-                    console.log(map)
+                    // console.log(map)
 
                 }else {
-                    console.log("Path : " + path )
-                    console.log("Value : " + value)
+                    // console.log("Path : " + path )
+                    // console.log("Value : " + value)
                     map.set(path,value)
                 }
             }
@@ -50,119 +52,49 @@ function part1Refactor() {
 
     })
 
-    console.log("Final map :  ")
+    console.log("map before adding each other")
     console.log(map)
-}
 
+    const finalMap = new Map(map)
+    const finalFinalMap = new Map()
+    map.forEach((value, key, map) => {
 
+        // console.log("KEY MAP 1 : " + key)
+        // console.log("VALUE MAP 1 : " + value)
 
-function part1() {
+        let valueToAdd = value
+        finalMap.forEach((finalMapValue, finalMapKey, finalMapMap) => {
+            if (!(key === finalMapKey)) {
+                // console.log("Key 1 not equals Key 2 " + finalMapKey)
 
-    let finalJson = {}
-    let goto = ""
-    parsedDataset.forEach(line => {
-
-        let temporaryJson = {}
-
-        if (new RegExp(/\$.*cd/).test(line)) {
-
-            let lineArray = line.split(" ")
-            goto = lineArray[2].trim()
-
-
-            console.log("GOTO : " + goto)
-
-
-            if (goto !== "/") {
-                Object.keys(finalJson).forEach(function (key) {
-                    let value = finalJson[key]
-                    if (key === goto) {
-                        console.log("GOTO INSIDE : " + goto)
-                        temporaryJson = value
-                    }
-                });
-            }
-
-        } else if (!(new RegExp(/\$.*ls/).test(line))) {
-            //Create dir and file
-            // console.log("not ls " + line)
-            let lineArray = line.split(" ")
-            let objName = lineArray[1].trim()
-            let sizeOrDir = lineArray[0].trim()
-
-            if (sizeOrDir === "dir") {
-                // json.directory.push(lineArray[1] : {})
-                temporaryJson[objName] = {}
-            } else {
-                temporaryJson[objName] = sizeOrDir
-                // json.directory.push({ objName: sizeOrDir })
-            }
-        }
-
-        if (goto === "/") {
-
-            Object.keys(temporaryJson).forEach(function (key) {
-                let value = temporaryJson[key]
-                finalJson[key] = value
-            })
-        } else {
-
-            console.log(JSON.stringify(temporaryJson, null, 2))
-
-            Object.keys(finalJson).forEach(function (key) {
-                let value = finalJson[key]
-
-                if (key === goto) {
-
-                    Object.keys(temporaryJson).forEach(function (keyTemporaryJson) {
-                        let value = temporaryJson[keyTemporaryJson]
-                        finalJson[keyTemporaryJson] = value
-                    })
+                if (finalMapKey.toString().includes(key)){
+                    // console.log("Key 2 "  + finalMapKey + " includes Key 1 " + key)
+                    valueToAdd += finalMapValue
                 }
-            })
+            }else {
+                // console.log("Key 1 equals Key 2 " + finalMapKey)
+            }
+        })
+
+        finalFinalMap.set(key,valueToAdd)
+    })
+    
+    // console.log("") 
+    // console.log("finalFinalMap") 
+    // console.log(finalFinalMap) 
+
+
+
+    console.log("") 
+    let totalpart1 = 0
+    finalFinalMap.forEach((value, key, map) => {
+        if (parseInt(value,10) <= 100000){
+            totalpart1+= parseInt(value,10)
+            // console.log(`key[${key}] = ${value}`);
         }
     })
-    console.log(JSON.stringify(finalJson, null, 2))
+
+    // console.log("Total part 1 : " + totalpart1)
 }
 
-// PART 2
-
-function part2() {
-
-}
-
-function part1and2(markerLength) {
-
-    parsedDataset.forEach(line => {
-        let charArray = []
-        let index = 0
-
-        for (const char of line) {
-            if (charArray.length !== markerLength) {
-                charArray.push(char)
-            } else {
-                if (arrayIncludes(charArray)) {
-                    charArray.shift()
-                    charArray.push(char)
-                } else {
-                    finalAnswer = index
-                    break
-                }
-            }
-            index++
-        }
-        console.log("Final answer : " + finalAnswer)
-    })
-}
-
-function arrayIncludes(array) {
-    let copyOfArray = [...array]
-    for (let i = 0; i < array.length - 1; i++) {
-        copyOfArray.splice(i, 1)
-        if (copyOfArray.includes(array[i])) {
-            return true
-        }
-        copyOfArray = [...array]
-    }
-    return false
-}
+//First guess 905276 wrong too low
