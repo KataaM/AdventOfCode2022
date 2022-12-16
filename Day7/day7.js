@@ -65,16 +65,23 @@ function part1Refactor() {
         let valueToAdd = value
         finalMap.forEach((finalMapValue, finalMapKey, finalMapMap) => {
             if (!(key === finalMapKey)) {
-                // console.log("Key 1 not equals Key 2 " + finalMapKey)
+                
 
                 if (finalMapKey.toString().includes(key)){
-                    // console.log("Key 2 "  + finalMapKey + " includes Key 1 " + key)
+                    console.log("Directory 1 : " + key )
+                    console.log("Directory 2 : " + finalMapKey )
+                    console.log("directory 2 is in directory 1")
+                    console.log("valueToAdd : " + valueToAdd)
+
                     valueToAdd += finalMapValue
+                }else {
+
                 }
             }else {
                 // console.log("Key 1 equals Key 2 " + finalMapKey)
             }
         })
+
 
         finalFinalMap.set(key,valueToAdd)
     })
@@ -85,16 +92,17 @@ function part1Refactor() {
 
 
 
-    console.log("") 
+    // console.log("") 
     let totalpart1 = 0
     finalFinalMap.forEach((value, key, map) => {
+        console.log(`key[${key}] = ${value}`);
         if (parseInt(value,10) <= 100000){
             totalpart1+= parseInt(value,10)
             // console.log(`key[${key}] = ${value}`);
         }
     })
 
-    // console.log("Total part 1 : " + totalpart1)
+    console.log("Total part 1 : " + totalpart1)
 }
 
 //First guess 905276 wrong too low
