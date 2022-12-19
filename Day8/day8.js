@@ -26,6 +26,9 @@ function part1() {
     let onEdge = treeArray.length *4 -4
     console.log("On edge " + onEdge)
     let visibleTreeTotal = onEdge
+
+    let highestScenicScore = 0
+
     for (let rowIndex = 1; rowIndex < treeArray.length-1; rowIndex++) {
         for (let columnIndex = 1; columnIndex < treeArray.length-1; columnIndex++) {
             // console.log("Current value " + treeArray[rowIndex][columnIndex])
@@ -41,10 +44,16 @@ function part1() {
                 visibleTreeTotal++
             }
 
+            let scenicScore = viewedTree(treeArray[rowIndex],columnIndex) * viewedTree(transposedArray[columnIndex],rowIndex)
+            if (highestScenicScore < scenicScore) {
+                highestScenicScore = scenicScore
+            }
         }
     }
 
     console.log("VisibleTreetotal " + visibleTreeTotal)
+    console.log("highestScenicScore " + highestScenicScore)
+
 }
 
 function parseRow(rowArray,columIndex) {
@@ -70,8 +79,32 @@ function parseRow(rowArray,columIndex) {
     return right || left
 }
 
-function parseCol(){}
+function viewedTree(rowArray,columIndex) {
+    let value = rowArray[columIndex]
+    let right = true
+    let left = true
 
+    let nbrOfTreeViewedRight = 0
+    let nbrOfTreeViewedLeft = 0
 
+    // console.log(rowArray)
+    // console.log("Column index " + columIndex)
 
-//First guess 905276 wrong too low
+    for (let colIndex = columIndex+1; colIndex < rowArray.length; colIndex++) {
+        nbrOfTreeViewedRight++
+        if (rowArray[colIndex] >= value) {
+            right = false
+            break
+        }
+    }
+
+    for (let colIndex = columIndex-1; colIndex >= 0; colIndex--) {
+        nbrOfTreeViewedLeft++
+        if (rowArray[colIndex] >= value) {
+            left = false
+            break
+        }
+    }
+
+    return nbrOfTreeViewedRight * nbrOfTreeViewedLeft
+}
